@@ -66,20 +66,19 @@ function lengthChilds() {
 }
 
 function CreaNouIncident() {
-  nom = document.getElementById(toString(lengthChilds) + "TitolNou").value;
+  nom = document.getElementById("TitolNou").value;
   des = document.getElementById("DescripcioNou").value;
   grau = document.getElementById("GrauNou").value;
-  img = url;
+  img = "Imatge";
 
   if (nom != "" && des != "") {
     AfegirFirebaseIncident(nom, des, img, grau);
     document.getElementById('linea').innerHTML = "";
-    BuscaPregons();
   }
 }
 
 function CreaIncident(nom, des, img, grau) {
-    document.getElementById('linea').innerHTML += "";
+    document.getElementById('linea').innerHTML = "";
     document.getElementById('linea').innerHTML +=
     `<div class="card mb-4 shadow-sm">
       <div class="card-header">
@@ -132,3 +131,42 @@ Desc.addEventListener("click", function () {
     img.src = url;
   })
 })
+
+function Registre() {
+  correu = document.getElementById("Correu").value;
+  contra = document.getElementById("Contrasenya").value;
+  if (correu != "" && contra != "") {
+    firebase.auth().createUserWithEmailAndPassword(correu, contra)
+  }
+}
+
+function IniciSessio() {
+  correu = document.getElementById("Correu").value;
+  contra = document.getElementById("Contrasenya").value;
+  if (correu != "" && contra != "") {
+    firebase.auth().signInWithEmailAndPassword(correu, contra).catch(function(error) {
+      console.log("Sessió Iniciada")
+  });
+  }
+  firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+    var displayName = user.displayName;
+    var email = user.email;
+    console.log(email);
+    var emailVerified = user.emailVerified;
+    var photoURL = user.photoURL;
+    var isAnonymous = user.isAnonymous;
+    var uid = user.uid;
+    var providerData = user.providerData;
+    // ...
+  } else {
+    // User is signed out.
+    console.log("Signed Out");
+  }
+});
+}
+
+function SortidaSessio() {
+  firebase.auth().signOut()
+}
